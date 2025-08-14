@@ -1,4 +1,4 @@
-// 게시글 목록을 보여주는 서버 컴포넌트
+// 게시글 목록을 보여주는 서버 컴포넌트 (좋아요/댓글 데이터 포함)
 // 데이터베이스에서 게시글들을 가져와서 PostCard로 렌더링합니다
 
 import { db } from '@/lib/db'
@@ -6,7 +6,7 @@ import PostCard from './PostCard'
 
 export default async function PostList() {
   try {
-    // 게시글과 작성자 정보를 함께 조회 (최신순)
+    // 게시글과 작성자, 좋아요, 댓글 정보를 함께 조회 (최신순)
     const posts = await db.post.findMany({
       include: {
         author: {
@@ -14,6 +14,25 @@ export default async function PostList() {
             id: true,
             name: true,
             image: true,
+          }
+        },
+        likes: {
+          select: {
+            userId: true,
+          }
+        },
+        comments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+              }
+            }
+          },
+          orderBy: {
+            createdAt: 'asc'
           }
         }
       },

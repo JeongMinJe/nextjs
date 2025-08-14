@@ -1,5 +1,5 @@
-// Prisma 스키마 파일 - Post 모델을 추가합니다
-// User와 Post 간의 1:N 관계를 정의합니다
+// Prisma 스키마 파일 - Like, Comment 모델 추가
+// User-Post 간 좋아요/댓글 관계를 정의합니다
 
 generator client {
   provider = "prisma-client-js"
@@ -22,7 +22,9 @@ model User {
 
   accounts Account[]
   sessions Session[]
-  posts    Post[]    // 사용자가 작성한 게시글들
+  posts    Post[]
+  likes    Like[]     // 사용자가 누른 좋아요들
+  comments Comment[]  // 사용자가 작성한 댓글들
 
   @@map("users")
 }
@@ -30,15 +32,47 @@ model User {
 model Post {
   id        String   @id @default(cuid())
   caption   String?  @db.Text
-  imageUrl  String   // 게시글 이미지 URL (필수)
+  imageUrl  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // 작성자 관계
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  
+  likes    Like[]    // 이 게시글의 좋아요들
+  comments Comment[] // 이 게시글의 댓글들
 
   @@map("posts")
+}
+
+model Like {
+  id     String @id @default(cuid())
+  userId String
+  postId String
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  // 한 사용자는 같은 게시글에 좋아요를 한 번만 가능
+  @@unique([userId, postId])
+  @@map("likes")
+}
+
+model Comment {
+  id      String @id @default(cuid())
+  content String @db.Text
+  userId  String
+  postId  String
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@map("comments")
 }
 
 model Account {
