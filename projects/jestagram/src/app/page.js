@@ -1,13 +1,12 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import Link from "next/link";
-import { Camera, Heart, Users, Sparkles } from "lucide-react";
+import { Camera, Heart, Users, Sparkles, ArrowRight } from "lucide-react";
 
 export default async function HomePage() {
-  // 서버에서 현재 로그인 상태 확인
   const session = await getServerSession(authOptions);
 
-  // 로그인하지 않은 사용자에게 보여줄 페이지
+  // 로그인하지 않은 사용자용 랜딩 페이지
   if (!session) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -33,22 +32,13 @@ export default async function HomePage() {
               className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
             >
               <span>GitHub로 시작하기</span>
-              <Sparkles className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
 
           {/* 기능 소개 */}
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="text-center p-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-pink-100 rounded-full mb-4">
-                <Camera className="w-6 h-6 text-pink-600" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">사진 공유</h3>
-              <p className="text-gray-600">
-                멋진 순간들을 기록하고 친구들과 공유하세요
-              </p>
-            </div>
-            <div className="text-center p-6">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6 bg-white rounded-lg shadow-sm">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mb-4">
                 <Heart className="w-6 h-6 text-red-600" />
               </div>
@@ -57,7 +47,7 @@ export default async function HomePage() {
                 좋아요와 댓글로 친구들과 소통하세요
               </p>
             </div>
-            <div className="text-center p-6">
+            <div className="text-center p-6 bg-white rounded-lg shadow-sm">
               <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-4">
                 <Users className="w-6 h-6 text-blue-600" />
               </div>
@@ -67,19 +57,15 @@ export default async function HomePage() {
               </p>
             </div>
           </div>
-
-          <p className="text-sm text-gray-500">
-            무료로 시작하세요 • 몇 초만에 가입 완료
-          </p>
         </div>
       </div>
     );
   }
 
-  // 로그인한 사용자에게 보여줄 페이지
+  // 로그인한 사용자용 홈페이지
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto py-8 px-4">
+      <div className="max-w-2xl mx-auto py-8">
         {/* 환영 메시지 */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-center space-x-4">
@@ -92,25 +78,37 @@ export default async function HomePage() {
               <h1 className="text-xl font-semibold text-gray-900">
                 안녕하세요, {session.user.name}님! 👋
               </h1>
-              <p className="text-gray-600">MyGram에 오신 것을 환영합니다!</p>
+              <p className="text-gray-600">
+                오늘은 어떤 특별한 순간을 공유해볼까요?
+              </p>
             </div>
           </div>
-
-          {/* 로그아웃 버튼 (임시) */}
-          <div className="mt-4 flex space-x-3">
+          <div className="mt-4">
             <Link
-              href="/api/auth/signout"
-              className="text-red-600 hover:text-red-700 text-sm transition-colors"
+              href="/create"
+              className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
             >
-              로그아웃
+              <Sparkles className="w-4 h-4" />
+              <span>새 게시글 작성하기</span>
             </Link>
           </div>
         </div>
 
-        <div className="text-center py-12">
-          <p className="text-gray-500">
-            곧 게시글 작성 기능이 추가될 예정입니다! 🚀
+        {/* 피드 영역 */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Camera className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            피드가 곧 추가될 예정입니다!
+          </h3>
+          <p className="text-gray-500 mb-6">
+            게시글 작성과 피드 기능이 다음 단계에서 구현됩니다
           </p>
+          <div className="flex items-center justify-center space-x-2 text-blue-600">
+            <Sparkles className="w-5 h-5" />
+            <span className="font-medium">5단계를 기대해주세요!</span>
+          </div>
         </div>
       </div>
     </div>
