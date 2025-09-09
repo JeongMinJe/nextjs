@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import Link from "next/link";
 
 export default async function TestDBPage() {
   try {
@@ -42,12 +43,12 @@ export default async function TestDBPage() {
           </p>
 
           <div className="mt-6 text-center">
-            <a
+            <Link
               href="/"
               className="text-blue-600 hover:text-blue-700 text-sm underline"
             >
               ← 홈으로 돌아가기
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -65,12 +66,12 @@ export default async function TestDBPage() {
             </p>
           </div>
           <div className="mt-6 text-center">
-            <a
+            <Link
               href="/"
               className="text-blue-600 hover:text-blue-700 text-sm underline"
             >
               ← 홈으로 돌아가기
-            </a>
+            </Link>
           </div>
         </div>
       </div>
