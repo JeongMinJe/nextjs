@@ -23,14 +23,18 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  // 관계 설정 (이 사용자와 연결된 다른 데이터들)
-  accounts Account[]  // 이 사용자의 소셜 로그인 계정들
-  sessions Session[]  // 이 사용자의 로그인 세션들
-  posts    Post[]     // 이 사용자가 작성한 게시글들
-  likes    Like[]     // 이 사용자가 누른 좋아요들
-  comments Comment[]  // 이 사용자가 작성한 댓글들
+  // 기존 관계들
+  accounts Account[]
+  sessions Session[]
+  posts    Post[]
+  likes    Like[]
+  comments Comment[]
 
-  @@map("users")  // 실제 테이블명은 "users"
+  // 🆕 팔로우 관계 추가
+  following Follow[] @relation("UserFollowing")  // 내가 팔로우하는 사람들
+  followers Follow[] @relation("UserFollowers")  // 나를 팔로우하는 사람들
+
+  @@map("users")
 }
 
 // ==========================================
@@ -124,3 +128,21 @@ model Session {
 
   @@map("sessions")
 }
+
+
+// 🆕 팔로우 관계 테이블 추가 (파일 맨 아래에 추가)
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String   // 팔로우하는 사람 ID
+  followingId String   // 팔로우당하는 사람 ID
+  createdAt   DateTime @default(now())
+
+  // 관계 설정
+  follower  User @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  // 중요: 같은 사람을 중복으로 팔로우할 수 없도록 유니크 제약
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
