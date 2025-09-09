@@ -6,7 +6,7 @@ import CreatePostForm from "@/components/CreatePostForm";
 import { Camera, Image as ImageIcon, Sparkles, Lightbulb } from "lucide-react";
 
 export const metadata = {
-  title: "새 게시글 작성 - MyGram",
+  title: "새 게시글 작성 - Minje-gram",
   description: "새로운 순간을 공유해보세요",
 };
 

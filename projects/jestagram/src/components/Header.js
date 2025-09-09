@@ -82,7 +82,7 @@ export default function Header() {
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-pink-500 rounded-full animate-pulse"></div>
             </div>
             <span className="text-xl font-bold logo-gradient hidden sm:block">
-              MyGram
+              Minje-gram
             </span>
           </Link>
 

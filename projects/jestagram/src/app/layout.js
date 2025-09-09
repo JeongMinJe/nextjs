@@ -8,7 +8,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "MyGram - 나만의 인스타그램",
+  title: "Minje-gram - 나만의 인스타그램",
   description: "Next.js로 만든 소셜 미디어 플랫폼",
 };
 

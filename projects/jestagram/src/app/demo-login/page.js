@@ -53,7 +53,9 @@ export default function DemoLoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-4 animate-pulse">
             <Camera className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">📸 MyGram</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            📸 Minje-gram
+          </h2>
           <p className="text-gray-600">
             데모 계정으로 포트폴리오를 체험해보세요
           </p>
