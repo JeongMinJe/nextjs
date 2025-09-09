@@ -26,7 +26,7 @@ export default async function HomePage({ searchParams }) {
             </div>
             <h1 className="text-5xl font-bold mb-6">
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Minje-gram
+                Jestagram
               </span>
               에 오신 걸 환영합니다!
             </h1>
@@ -315,7 +315,7 @@ export default async function HomePage({ searchParams }) {
           {/* 푸터 정보 */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="text-center">
-              <h4 className="font-semibold text-gray-900 mb-2">Minje-gram</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">Jestagram</h4>
               <p className="text-sm text-gray-500 mb-4">
                 친구들과 일상을 공유하고 새로운 사람들과 연결되는 공간
               </p>
@@ -340,7 +340,7 @@ export default async function HomePage({ searchParams }) {
                 </Link>
               </div>
               <p className="text-xs text-gray-400 mt-4">
-                © 2024 Minje-gram. All rights reserved.
+                © 2024 Jestagram. All rights reserved.
               </p>
             </div>
           </div>

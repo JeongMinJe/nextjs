@@ -54,7 +54,7 @@ export default function DemoLoginPage() {
             <Camera className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            📸 Minje-gram
+            📸 Jestagram
           </h2>
           <p className="text-gray-600">
             데모 계정으로 포트폴리오를 체험해보세요
