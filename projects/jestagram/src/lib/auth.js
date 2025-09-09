@@ -11,6 +11,13 @@ function getIsDemoMode() {
   const isDemo = process.env.DEMO_MODE === "true";
   console.log("🔍 DEMO_MODE 환경변수:", process.env.DEMO_MODE);
   console.log("🔍 isDemoMode:", isDemo);
+
+  // Vercel에서는 강제로 데모 모드 활성화
+  if (process.env.VERCEL) {
+    console.log("🚀 Vercel 환경에서 강제로 데모 모드 활성화");
+    return true;
+  }
+
   return isDemo;
 }
 
