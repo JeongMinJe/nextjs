@@ -170,57 +170,6 @@ export async function toggleLike(postId) {
   }
 }
 
-// 게시글 목록과 좋아요 정보 가져오기
-export async function getPostsWithLikes() {
-  try {
-    const session = await getServerSession(authOptions);
-
-    // 게시글 목록 가져오기 (최신순)
-    const posts = await db.post.findMany({
-      include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
-        },
-        likes: {
-          select: {
-            userId: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
-            comments: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc", // 최신 게시글부터
-      },
-    });
-
-    // 현재 사용자가 각 게시글에 좋아요했는지 확인
-    const postsWithLikeStatus = posts.map((post) => ({
-      ...post,
-      likesCount: post._count.likes,
-      isLiked: session
-        ? post.likes.some((like) => like.userId === session.user.id)
-        : false,
-      // likes 배열은 제거 (클라이언트에서 필요 없음)
-      likes: undefined,
-      _count: undefined,
-    }));
-
-    return { success: true, posts: postsWithLikeStatus };
-  } catch (error) {
-    console.error("❌ 게시글 목록 조회 오류:", error);
-    return { error: "게시글을 불러올 수 없습니다" };
-  }
-}
-
 // 댓글 작성 함수
 export async function addComment(formData) {
   try {
