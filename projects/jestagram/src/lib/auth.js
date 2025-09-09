@@ -1,33 +1,69 @@
+// lib/auth.js
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GitHubProvider from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
+import { DEMO_ACCOUNTS } from "@/lib/demo-accounts";
+
+// 환경 변수로 데모 모드 확인
+const isDemoMode = process.env.DEMO_MODE === "true";
 
 export const authOptions = {
-  // Prisma를 사용하여 사용자 정보를 데이터베이스에 저장
   adapter: PrismaAdapter(db),
 
-  // 로그인 방법들 (현재는 GitHub만)
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    }),
+    // 데모 모드일 때만 Credentials Provider 활성화
+    ...(isDemoMode
+      ? [
+          CredentialsProvider({
+            id: "demo",
+            name: "Demo",
+            credentials: {
+              userId: { label: "User ID", type: "text" },
+            },
+            async authorize(credentials) {
+              if (credentials?.userId) {
+                const account = DEMO_ACCOUNTS.find(
+                  (account) => account.id === credentials.userId
+                );
+                if (account) {
+                  return {
+                    id: account.id,
+                    name: account.name,
+                    email: account.email,
+                    image: account.image,
+                  };
+                }
+              }
+              return null;
+            },
+          }),
+        ]
+      : []),
+
+    // GitHub Provider (로컬에서만 활성화)
+    ...(isDemoMode
+      ? []
+      : [
+          GitHubProvider({
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+          }),
+        ]),
   ],
 
-  // 콜백 함수들 (로그인 과정에서 실행되는 함수들)
   callbacks: {
-    // 세션 정보에 사용자 ID 추가
     session: ({ session, user }) => ({
       ...session,
       user: {
         ...session.user,
-        id: user.id, // 데이터베이스의 사용자 ID 추가
+        id: user.id,
       },
     }),
   },
 
-  // 커스텀 페이지 설정
   pages: {
-    signIn: "/login", // 로그인이 필요할 때 이동할 페이지
+    // 데모 모드일 때만 데모 로그인 페이지 사용
+    signIn: isDemoMode ? "/demo-login" : "/login",
   },
 };
