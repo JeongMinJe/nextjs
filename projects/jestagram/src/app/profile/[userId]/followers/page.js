@@ -1,8 +1,7 @@
 // app/profile/[userId]/followers/page.js
 // 팔로워 목록 페이지
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { getFollowers } from "@/actions/follow";
@@ -11,7 +10,7 @@ import Link from "next/link";
 import { ArrowLeft, Users } from "lucide-react";
 
 export default async function FollowersPage({ params }) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const { userId } = params;
 
   // 사용자 기본 정보 조회

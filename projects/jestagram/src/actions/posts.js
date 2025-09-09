@@ -1,10 +1,9 @@
 // 게시글 관련 서버 액션들 - 게시글 생성, 수정, 삭제를 처리합니다
 "use server"; // 🔥 중요! 이 지시어로 서버에서만 실행됨
 
-import { getServerSession } from "next-auth";
+import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export async function createPost(formData) {
@@ -12,7 +11,7 @@ export async function createPost(formData) {
     console.log("📝 게시글 생성 시작...");
 
     // 🔐 1단계: 로그인 확인
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       throw new Error("로그인이 필요합니다");
     }
@@ -96,7 +95,7 @@ export async function toggleLike(postId) {
     console.log("❤️ 좋아요 토글 시작:", postId);
 
     // 로그인 확인
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return { error: "로그인이 필요합니다" };
     }
@@ -176,7 +175,7 @@ export async function addComment(formData) {
     console.log("💬 댓글 작성 시작...");
 
     // 로그인 확인
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return { error: "로그인이 필요합니다" };
     }
@@ -254,7 +253,7 @@ export async function deleteComment(commentId) {
     console.log("🗑️ 댓글 삭제 시작:", commentId);
 
     // 로그인 확인
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return { error: "로그인이 필요합니다" };
     }
@@ -309,7 +308,7 @@ export async function deleteComment(commentId) {
 // 게시글 목록과 좋아요, 댓글 정보 가져오기 (팔로우 필터 추가)
 export async function getPostsWithLikes(feedType = "all") {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     let whereCondition = {};
 

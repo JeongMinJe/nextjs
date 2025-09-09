@@ -1,6 +1,5 @@
 // app/page.js 수정 (피드 탭 추가)
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { getPostsWithLikes } from "@/actions/posts";
 import { getRecommendedUsers } from "@/actions/follow";
 import Link from "next/link";
@@ -10,7 +9,7 @@ import FeedTabs from "@/components/FeedTabs";
 import { Camera, Heart, Users, Sparkles, ArrowRight, Plus } from "lucide-react";
 
 export default async function HomePage({ searchParams }) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const resolvedSearchParams = await searchParams; // Next.js 15 호환성
   const feedType = resolvedSearchParams.feed || "all"; // 'all' 또는 'following'
 

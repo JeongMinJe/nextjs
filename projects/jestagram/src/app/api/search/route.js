@@ -2,8 +2,7 @@
 // 검색 API 엔드포인트
 
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export async function GET(request) {
@@ -34,7 +33,7 @@ export async function GET(request) {
     console.log("📝 정제된 검색어:", searchTerm);
 
     // 현재 사용자 정보 (로그인 체크)
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     // 1. 사용자 검색 (이름으로 검색)
     const users = await db.user.findMany({

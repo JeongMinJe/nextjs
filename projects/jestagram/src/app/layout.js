@@ -1,6 +1,5 @@
 import { Inter } from "next/font/google";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import SessionProvider from "@/components/SessionProvider";
 import Header from "@/components/Header";
 import "./globals.css";
@@ -13,7 +12,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   return (
     <html lang="ko">

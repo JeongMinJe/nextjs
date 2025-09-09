@@ -1,7 +1,6 @@
 // UploadThing 서버 설정 - 이미지 업로드 규칙을 정의합니다
 import { createUploadthing } from "uploadthing/next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 
 // UploadThing 팩토리 함수 생성
 const f = createUploadthing();
@@ -18,7 +17,7 @@ export const ourFileRouter = {
     // 업로드 전에 실행되는 미들웨어 (보안 검사)
     .middleware(async () => {
       // 현재 로그인한 사용자 확인
-      const session = await getServerSession(authOptions);
+      const session = await auth();
 
       // 로그인하지 않은 사용자는 업로드 불가
       if (!session) {

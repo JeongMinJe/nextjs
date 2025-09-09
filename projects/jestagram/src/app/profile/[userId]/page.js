@@ -1,8 +1,7 @@
 // app/profile/[userId]/page.js
 // 다른 사용자의 프로필 페이지
 
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { getUserFollowStatus } from "@/actions/follow";
@@ -20,7 +19,7 @@ import {
 } from "lucide-react";
 
 export default async function UserProfilePage({ params }) {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
   const { userId } = params;
 
   // 사용자 정보 조회

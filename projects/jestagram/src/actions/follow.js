@@ -3,9 +3,8 @@
 
 "use server";
 
-import { getServerSession } from "next-auth";
+import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 // 팔로우/언팔로우 토글 함수
@@ -14,7 +13,7 @@ export async function toggleFollow(targetUserId) {
     console.log("👥 팔로우 토글 시작:", targetUserId);
 
     // 로그인 확인
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return { error: "로그인이 필요합니다" };
     }
@@ -104,7 +103,7 @@ export async function toggleFollow(targetUserId) {
 // 사용자의 팔로우 상태 및 통계 가져오기
 export async function getUserFollowStatus(targetUserId) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     // 팔로워/팔로잉 수 계산
     const [followersCount, followingCount] = await Promise.all([
@@ -241,7 +240,7 @@ export async function getFollowing(userId, limit = 20) {
 // 추천 사용자 가져오기 (간단한 알고리즘)
 export async function getRecommendedUsers(limit = 10) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session) {
       // 로그인하지 않은 경우 인기 사용자 추천

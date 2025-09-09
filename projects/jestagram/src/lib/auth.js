@@ -1,21 +1,22 @@
 // lib/auth.js
+import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import GitHubProvider from "next-auth/providers/github";
-import CredentialsProvider from "next-auth/providers/credentials";
+import GitHub from "next-auth/providers/github";
+import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
 import { DEMO_ACCOUNTS } from "@/lib/demo-accounts";
 
 // 환경 변수로 데모 모드 확인
 const isDemoMode = process.env.DEMO_MODE === "true";
 
-export const authOptions = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
 
   providers: [
     // 데모 모드일 때만 Credentials Provider 활성화
     ...(isDemoMode
       ? [
-          CredentialsProvider({
+          Credentials({
             id: "demo",
             name: "Demo",
             credentials: {
@@ -45,7 +46,7 @@ export const authOptions = {
     ...(isDemoMode
       ? []
       : [
-          GitHubProvider({
+          GitHub({
             clientId: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET,
           }),
@@ -66,4 +67,4 @@ export const authOptions = {
     // 데모 모드일 때만 데모 로그인 페이지 사용
     signIn: isDemoMode ? "/demo-login" : "/login",
   },
-};
+});

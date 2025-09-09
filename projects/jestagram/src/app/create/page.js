@@ -1,6 +1,5 @@
 // 게시글 작성 페이지 (5단계 완전 새 버전)
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import CreatePostForm from "@/components/CreatePostForm";
 import { Camera, Image as ImageIcon, Sparkles, Lightbulb } from "lucide-react";
@@ -12,7 +11,7 @@ export const metadata = {
 
 export default async function CreatePage() {
   // 로그인 확인
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session) {
     redirect("/login");
