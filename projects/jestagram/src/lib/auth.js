@@ -11,20 +11,11 @@ const isDemo = process.env.DEMO_MODE === "true" || process.env.VERCEL;
 
 // 데모 사용자 찾기 또는 생성
 async function findOrCreateDemoUser(account) {
-  try {
-    let user = await db.user.findUnique({ where: { id: account.id } });
-    if (!user) {
-      console.log("🔍 사용자 생성 중:", account.id);
-      user = await db.user.create({ data: account });
-      console.log("✅ 사용자 생성 완료:", user.id);
-    } else {
-      console.log("🔍 기존 사용자 발견:", user.id);
-    }
-    return user;
-  } catch (error) {
-    console.error("❌ 사용자 생성/조회 오류:", error);
-    throw error;
+  let user = await db.user.findUnique({ where: { id: account.id } });
+  if (!user) {
+    user = await db.user.create({ data: account });
   }
+  return user;
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -41,36 +32,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               userId: { label: "User ID", type: "text" },
             },
             async authorize(credentials) {
-              console.log("🔍 authorize 호출됨:", credentials);
-
-              if (!credentials?.userId) {
-                console.log("❌ userId 없음");
-                return null;
-              }
+              if (!credentials?.userId) return null;
 
               const account = DEMO_ACCOUNTS.find(
                 (account) => account.id === credentials.userId
               );
-              if (!account) {
-                console.log("❌ 계정을 찾을 수 없음:", credentials.userId);
-                return null;
-              }
+              if (!account) return null;
 
-              console.log("🔍 계정 발견:", account.name);
-
-              try {
-                const user = await findOrCreateDemoUser(account);
-                console.log("✅ 사용자 반환:", user.id);
-                return {
-                  id: user.id,
-                  name: user.name,
-                  email: user.email,
-                  image: user.image,
-                };
-              } catch (error) {
-                console.error("❌ authorize 오류:", error);
-                return null;
-              }
+              const user = await findOrCreateDemoUser(account);
+              return {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                image: user.image,
+              };
             },
           }),
         ]

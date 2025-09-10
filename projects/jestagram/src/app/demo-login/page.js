@@ -1,28 +1,15 @@
 // app/demo-login/page.js
 "use client";
 
-import { getSession, signIn } from "next-auth/react";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
 import { Camera } from "lucide-react";
 import { DEMO_ACCOUNTS } from "../../../prisma/seed/demo-accounts";
 
 export default function DemoLoginPage() {
   const [loadingUserId, setLoadingUserId] = useState(null);
-  const router = useRouter();
 
-  // 이미 로그인된 사용자는 홈페이지로 리다이렉트
-  useEffect(() => {
-    const checkSession = async () => {
-      const session = await getSession();
-      if (session) {
-        router.push("/");
-      }
-    };
-
-    // 컴포넌트 마운트 시에만 한 번 체크
-    checkSession();
-  }, []); // router 의존성 제거
+  // 세션 체크 로직 제거 - NextAuth가 자동으로 처리
 
   const handleDemoLogin = async (userId) => {
     setLoadingUserId(userId);
