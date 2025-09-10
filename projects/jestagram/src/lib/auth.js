@@ -19,7 +19,7 @@ async function findOrCreateDemoUser(account) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db),
+  adapter: isDemo ? undefined : PrismaAdapter(db),
 
   providers: [
     // 데모 모드일 때만 Credentials Provider 활성화
@@ -63,11 +63,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
 
   callbacks: {
-    session: ({ session, user }) => ({
+    session: ({ session, user, token }) => ({
       ...session,
       user: {
         ...session.user,
-        id: user.id,
+        id: isDemo ? token?.sub : user?.id,
       },
     }),
   },
