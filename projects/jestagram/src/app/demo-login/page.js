@@ -8,7 +8,7 @@ import { Camera } from "lucide-react";
 import { DEMO_ACCOUNTS } from "../../../prisma/seed/demo-accounts";
 
 export default function DemoLoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingUserId, setLoadingUserId] = useState(null);
   const router = useRouter();
 
   // 이미 로그인된 사용자는 홈페이지로 리다이렉트
@@ -19,29 +19,24 @@ export default function DemoLoginPage() {
         router.push("/");
       }
     };
+
+    // 컴포넌트 마운트 시에만 한 번 체크
     checkSession();
-  }, [router]);
+  }, []); // router 의존성 제거
 
   const handleDemoLogin = async (userId) => {
-    setIsLoading(true);
+    setLoadingUserId(userId);
     try {
-      const result = await signIn("demo", {
+      // NextAuth가 자동으로 로그인 처리 및 리다이렉트
+      await signIn("demo", {
         userId,
         callbackUrl: "/",
-        redirect: false,
+        redirect: true,
       });
-
-      if (result?.error) {
-        console.error("로그인 오류:", result.error);
-        alert("로그인에 실패했습니다. 다시 시도해주세요.");
-      } else if (result?.url) {
-        window.location.href = result.url;
-      }
     } catch (error) {
       console.error("로그인 오류:", error);
       alert("로그인 중 오류가 발생했습니다.");
-    } finally {
-      setIsLoading(false);
+      setLoadingUserId(null);
     }
   };
 
@@ -67,29 +62,32 @@ export default function DemoLoginPage() {
             데모 계정 선택
           </h3>
           <div className="space-y-3">
-            {DEMO_ACCOUNTS.map((account) => (
-              <button
-                key={account.id}
-                onClick={() => handleDemoLogin(account.id)}
-                disabled={isLoading}
-                className="w-full flex items-center p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <img
-                  src={account.image}
-                  alt={account.name}
-                  className="w-12 h-12 rounded-full mr-4"
-                />
-                <div className="text-left flex-1">
-                  <div className="font-medium text-gray-900">
-                    {account.name}
+            {DEMO_ACCOUNTS.map((account) => {
+              const isLoading = loadingUserId === account.id;
+              return (
+                <button
+                  key={account.id}
+                  onClick={() => handleDemoLogin(account.id)}
+                  disabled={loadingUserId !== null}
+                  className="w-full flex items-center p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <img
+                    src={account.image}
+                    alt={account.name}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div className="text-left flex-1">
+                    <div className="font-medium text-gray-900">
+                      {account.name}
+                    </div>
+                    <div className="text-sm text-gray-500">{account.bio}</div>
                   </div>
-                  <div className="text-sm text-gray-500">{account.bio}</div>
-                </div>
-                {isLoading && (
-                  <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-                )}
-              </button>
-            ))}
+                  {isLoading && (
+                    <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
