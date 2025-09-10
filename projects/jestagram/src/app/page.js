@@ -35,10 +35,10 @@ export default async function HomePage({ searchParams }) {
             </p>
 
             <Link
-              href="/login"
+              href="/api/auth/signin"
               className="inline-flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
             >
-              <span>GitHub로 시작하기</span>
+              <span>시작하기</span>
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>

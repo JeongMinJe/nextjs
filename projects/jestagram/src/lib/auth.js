@@ -6,27 +6,15 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
 import { DEMO_ACCOUNTS } from "@/lib/demo-accounts";
 
-// 환경 변수로 데모 모드 확인 (함수 내부에서 확인)
-function getIsDemoMode() {
-  const isDemo = process.env.DEMO_MODE === "true";
-  console.log("🔍 DEMO_MODE 환경변수:", process.env.DEMO_MODE);
-  console.log("🔍 isDemoMode:", isDemo);
-
-  // Vercel에서는 강제로 데모 모드 활성화
-  if (process.env.VERCEL) {
-    console.log("🚀 Vercel 환경에서 강제로 데모 모드 활성화");
-    return true;
-  }
-
-  return isDemo;
-}
+// 환경 변수로 데모 모드 확인
+const isDemo = process.env.DEMO_MODE === "true" || process.env.VERCEL;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
 
   providers: [
     // 데모 모드일 때만 Credentials Provider 활성화
-    ...(getIsDemoMode()
+    ...(isDemo
       ? [
           Credentials({
             id: "demo",
@@ -55,7 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       : []),
 
     // GitHub Provider (로컬에서만 활성화)
-    ...(getIsDemoMode()
+    ...(isDemo
       ? []
       : [
           GitHub({
@@ -77,6 +65,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
   pages: {
     // 데모 모드일 때만 데모 로그인 페이지 사용
-    signIn: getIsDemoMode() ? "/demo-login" : "/login",
+    signIn: isDemo ? "/demo-login" : "/login",
   },
 });
