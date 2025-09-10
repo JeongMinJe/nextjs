@@ -1,11 +1,11 @@
 // app/demo-login/page.js
 "use client";
 
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Camera } from "lucide-react";
-import { DEMO_ACCOUNTS } from "@/lib/demo-accounts";
+import { DEMO_ACCOUNTS } from "../../../prisma/seed/demo-accounts";
 
 export default function DemoLoginPage() {
   const [isLoading, setIsLoading] = useState(false);

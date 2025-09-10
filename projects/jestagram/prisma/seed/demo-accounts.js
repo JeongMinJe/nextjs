@@ -1,4 +1,4 @@
-// lib/demo-accounts.js
+// prisma/seed/demo-accounts.js
 export const DEMO_ACCOUNTS = [
   {
     id: "demo-user-1",
