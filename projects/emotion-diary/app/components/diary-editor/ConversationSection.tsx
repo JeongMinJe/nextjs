@@ -96,9 +96,13 @@ const ConversationSection = ({
             새로 대화하기
           </button>
           <button
-            disabled={isSaving}
+            disabled={isSaving || chatHistory.length === 0}
             onClick={handleSaveWithSummaryFromAI}
-            className="cursor-pointer w-48 h-8 flex justify-center items-center py-2 px-4 text-sm font-semibold bg-slate-400 text-white rounded-lg hover:bg-slate-600 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
+            className={`cursor-pointer w-48 h-8 flex justify-center items-center py-2 px-4 text-sm font-semibold rounded-lg transition-colors ${
+              chatHistory.length > 0 && !isSaving
+                ? "bg-slate-600 text-white hover:bg-slate-700"
+                : "bg-slate-300 text-slate-500 cursor-not-allowed"
+            } disabled:opacity-70 disabled:cursor-not-allowed`}
           >
             {isSaving ? (
               <ImSpinner2 className="animate-spin h-4 w-4" />

@@ -14,6 +14,7 @@ const EditSection = ({ onOpenChat }: EditSectionProps) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const [showModal, setShowModal] = useState(false);
   const [editorContent, setEditorContent] = useState("");
+  const [hasContent, setHasContent] = useState(false);
 
   const { mutate: saveDiary, isPending: isSaving } = useSaveDiary();
   const { mutateAsync: generateTitle } = useGenerateTitle();
@@ -31,7 +32,15 @@ const EditSection = ({ onOpenChat }: EditSectionProps) => {
       content,
     };
 
-    saveDiary(newDiary);
+    saveDiary(newDiary, {
+      onSuccess: () => {
+        // 저장 성공 후 에디터 초기화
+        if (textAreaRef.current) {
+          textAreaRef.current.value = "";
+          setHasContent(false);
+        }
+      },
+    });
   };
 
   const handleAIChatClick = () => {
@@ -59,11 +68,17 @@ const EditSection = ({ onOpenChat }: EditSectionProps) => {
     onOpenChat();
   };
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const content = e.target.value.trim();
+    setHasContent(content.length > 0);
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-md p-6 flex flex-col h-full">
       {/* 일기 입력 영역 */}
       <textarea
         ref={textAreaRef}
+        onChange={handleTextChange}
         className="flex-grow w-full p-3 border border-slate-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-slate-400 transition-colors"
         placeholder="오늘 하루는 어땠나요?"
       />
@@ -78,9 +93,13 @@ const EditSection = ({ onOpenChat }: EditSectionProps) => {
 
         {/* 일기 저장 버튼 (수정) */}
         <button
-          disabled={isSaving}
+          disabled={isSaving || !hasContent}
           onClick={handleSave}
-          className={`cursor-pointer w-32 h-11 flex justify-center items-center text-sm font-semibold bg-slate-400 text-white rounded-lg transition-colors hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 disabled:opacity-70 disabled:cursor-not-allowed`}
+          className={`cursor-pointer w-32 h-11 flex justify-center items-center text-sm font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+            hasContent && !isSaving
+              ? "bg-slate-600 text-white hover:bg-slate-700 focus:ring-slate-500"
+              : "bg-slate-300 text-slate-500 cursor-not-allowed"
+          } disabled:opacity-70 disabled:cursor-not-allowed`}
         >
           {isSaving ? (
             <ImSpinner2 className="animate-spin h-5 w-5" />
