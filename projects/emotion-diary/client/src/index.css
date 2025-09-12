@@ -1,5 +1,0 @@
-@import "tailwindcss";
-
-body {
-  @apply min-h-screen bg-gradient-to-br from-gray-50 to-slate-100 font-sans text-slate-800 antialiased;
-}
