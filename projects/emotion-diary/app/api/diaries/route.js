@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "../../lib/firebase-admin";
+import admin from "firebase-admin";
 
 // GET /api/diaries - 일기 목록 조회
 export async function GET(request) {
@@ -63,7 +64,7 @@ export async function POST(request) {
 
     const diaryToBeSaved = {
       ...body,
-      created_at: db.FieldValue.serverTimestamp(),
+      created_at: admin.firestore.FieldValue.serverTimestamp(),
     };
 
     const docRef = await db.collection("diaries").add(diaryToBeSaved);
