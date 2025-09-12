@@ -47,6 +47,3 @@ yarn-error.log*
 .DS_Store
 *.pem
 
-# Firebase Admin SDK Keys
-# ----------------
-**/firebase-adminsdk*.json
